@@ -1,0 +1,75 @@
+services:
+  postgres:
+    image: postgres:13
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pgpassword
+      POSTGRES_DB: hoppscotch
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  nestjs1:
+    build:
+      context: ./orders  # Path to the first NestJS server
+    container_name: nestjs_server_1
+    ports:
+      - "3100:3100"
+    depends_on:
+      - postgres
+    environment:
+      HOST: postgres
+      PORT: 3100
+      USER: postgres
+      PASSWORD: pgpassword
+      DATABASE: hoppscotch
+      DBPORT: 5432
+
+  nestjs2:
+    build:
+      context: ./products  # Path to the second NestJS server
+    container_name: nestjs_server_2
+    ports:
+      - "3200:3200"
+    depends_on:
+      - postgres
+    environment:
+      HOST: postgres
+      PORT: 3200
+      USER: postgres
+      PASSWORD: pgpassword
+      DATABASE: hoppscotch
+      DBPORT: 5432
+
+  nestjs3:
+    build:
+      context: ./user  # Path to the third NestJS server
+    container_name: nestjs_server_3
+    ports:
+      - "3300:3300"
+    depends_on:
+      - postgres
+    environment:
+      HOST: postgres
+      PORT: 3300
+      USER: postgres
+      PASSWORD: pgpassword
+      DATABASE: hoppscotch
+      DBPORT: 5432
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx_proxy
+    depends_on:
+      - nestjs1
+      - nestjs2
+      - nestjs3
+    ports:
+      - "5000:80"  # Expose Nginx on port 80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro  # Bind the Nginx configuration
+
+volumes:
+  postgres_data:

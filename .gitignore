@@ -1,0 +1,37 @@
+# Global exclusions for Node.js
+node_modules/
+.env
+.env.*
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Production
+build/
+
+*.env
+
+
+# Ignore any system or IDE files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Ignore project-specific files in each NestJS project
+project1/node_modules/
+project1/.env
+project1/.env.*
+
+project2/node_modules/
+project2/.env
+project2/.env.*
+
+project3/node_modules/
+project3/.env
+project3/.env.*
